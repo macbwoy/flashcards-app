@@ -10,9 +10,11 @@ export default StyleSheet.create({
     marginBottom: 10
   },
   deckHeaderText: {
-    fontSize: 24
+    fontSize: 24,
+    textAlign: 'center'
   },
   deckSubHeaderText: {
-    fontSize: 16
+    fontSize: 16,
+    textAlign: 'center'
   }
 })

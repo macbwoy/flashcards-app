@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { View } from "react-native"
+import { View, Keyboard } from "react-native"
 import BorderButton from "../BorderButton/index"
 import BorderTextInput from "../BorderTextInput/index"
 import styles from "./styles"
@@ -12,6 +12,7 @@ class AddCard extends Component {
 	onSumbit = () => {
 		console.log(JSON.stringify(this.state))
 		this.resetFields()
+		Keyboard.dismiss()
 	}
 
 	resetFields = () => {

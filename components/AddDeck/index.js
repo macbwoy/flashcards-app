@@ -1,16 +1,31 @@
 import React, { Component } from "react"
-import { View, Text } from "react-native"
+import { View, Keyboard, KeyboardAvoidingView, Text } from "react-native"
 import BorderButton from "../BorderButton/index"
 import BorderTextInput from "../BorderTextInput/index"
 import styles from "./styles"
+import { purple } from "../../utils/colors"
 
 class AddDeck extends Component {
+	static navigationOptions = {
+		title: "New Deck",
+		headerTintColor: "#fff",
+		headerStyle: {
+			backgroundColor: purple
+		}
+	}
+
 	state = {
 		deckTitle: ""
 	}
+
+	componentDidMount() {
+		console.log(this.props.navigation)
+	}
+
 	onSumbit = () => {
 		console.log(JSON.stringify(this.state))
 		this.resetFields()
+		Keyboard.dismiss()
 	}
 
 	resetFields = () => {
@@ -18,16 +33,17 @@ class AddDeck extends Component {
 			deckTitle: ""
 		})
 	}
+
 	render() {
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<View>
 					<Text style={styles.headerText}>
 						What is the title of your new deck?
 					</Text>
 					<BorderTextInput
 						placeholder="Deck Title"
-						value={this.state.answerText}
+						value={this.state.deckTitle}
 						onChangeText={text => this.setState({ deckTitle: text })}
 					/>
 				</View>
@@ -39,7 +55,7 @@ class AddDeck extends Component {
 						backgroundColor="#000"
 					/>
 				</View>
-			</View>
+			</KeyboardAvoidingView>
 		)
 	}
 }

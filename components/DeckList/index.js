@@ -1,28 +1,38 @@
-import React from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
-import styles from './styles'
+import React, { Component } from "react"
+import { TouchableOpacity, View, Text } from "react-native"
+import styles from "./styles"
+import { purple } from "../../utils/colors"
 
-const DeckList = () => {
-  const onPressHandler = () => {
-    console.log('Hello World')
-  }
+class DeckList extends Component {
+	static navigationOptions = {
+		title: "Deck List",
+		headerTintColor: "#fff",
+		headerStyle: {
+			backgroundColor: purple
+		}
+	}
 
-  const renderDeckButton = () => (
-    <TouchableOpacity onPress={onPressHandler} style={styles.button}>
-      <Text style={styles.deckHeaderText}>
-        Deck 1
-      </Text>
-      <Text style={styles.deckSubHeaderText}>
-        0 cards
-      </Text>
-    </TouchableOpacity>
-  )
-  return (
-    <View style={styles.container}>
-      {renderDeckButton()}
-      {renderDeckButton()}
-    </View>
-  )
+	state = {}
+
+	onPressHandler = () => {
+		console.log("Hello World")
+	}
+
+	renderDeckButton = () => (
+		<TouchableOpacity onPress={this.onPressHandler} style={styles.button}>
+			<Text style={styles.deckHeaderText}>Deck 1</Text>
+			<Text style={styles.deckSubHeaderText}>0 cards</Text>
+		</TouchableOpacity>
+	)
+
+	render() {
+		return (
+			<View style={styles.container}>
+				{this.renderDeckButton()}
+				{this.renderDeckButton()}
+			</View>
+		)
+	}
 }
 
 export default DeckList
