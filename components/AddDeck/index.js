@@ -1,40 +1,89 @@
 import React, { Component } from "react"
-import { View, Keyboard, KeyboardAvoidingView, Text } from "react-native"
+import { View, Keyboard, KeyboardAvoidingView, Text, Alert } from "react-native"
 import BorderButton from "../BorderButton/index"
 import BorderTextInput from "../BorderTextInput/index"
 import styles from "./styles"
-import { purple } from "../../utils/colors"
+import { primary } from "../../utils/colors"
+import { connect } from "react-redux"
+import { addDeck } from "../../actions"
+import { createDeck } from "../../utils/api"
 
 class AddDeck extends Component {
 	static navigationOptions = {
-		title: "New Deck",
-		headerTintColor: "#fff",
-		headerStyle: {
-			backgroundColor: purple
-		}
+		title: "New Deck"
 	}
 
 	state = {
-		deckTitle: ""
-	}
-
-	componentDidMount() {
-		console.log(this.props.navigation)
-	}
-
-	onSumbit = () => {
-		console.log(JSON.stringify(this.state))
-		this.resetFields()
-		Keyboard.dismiss()
+		title: ""
 	}
 
 	resetFields = () => {
 		this.setState({
-			deckTitle: ""
+			title: ""
+		})
+		Keyboard.dismiss()
+	}
+
+	alertBox = options => {
+		const { navigation, storeDeck } = this.props
+		this.resetFields()
+
+		options.title === "Confirm"
+			? Alert.alert(
+					options.title,
+					options.msg,
+					[
+						{
+							text: "Cancel",
+							onPress: () => console.log("Cancel Pressed"),
+							style: "cancel"
+						},
+						{
+							text: "OK",
+							onPress: () => {
+								storeDeck(options.data)
+
+								navigation.navigate("Deck", options.navParams)
+							}
+						}
+					],
+					{ cancelable: false }
+			  )
+			: Alert.alert(options.title, options.msg)
+	}
+
+	onSumbit = () => {
+		let { title } = this.state
+		const { decks } = this.props
+
+		title = title.toLowerCase().trim()
+		const deckParams = { title, questions: [] }
+		const newDeck = {
+			[title]: deckParams
+		}
+
+		if (!title) {
+			return
+		}
+
+		if (decks[title]) {
+			this.alertBox({
+				title: "Error",
+				msg: "Can't Store Duplicate Deck title!"
+			})
+			this.resetFields()
+			return
+		}
+		this.alertBox({
+			title: "Confirm",
+			msg: "Press OK to add new deck",
+			navParams: deckParams,
+			data: newDeck
 		})
 	}
 
 	render() {
+		const { title } = this.state
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<View>
@@ -43,8 +92,8 @@ class AddDeck extends Component {
 					</Text>
 					<BorderTextInput
 						placeholder="Deck Title"
-						value={this.state.deckTitle}
-						onChangeText={text => this.setState({ deckTitle: text })}
+						value={title}
+						onChangeText={text => this.setState({ title: text })}
 					/>
 				</View>
 				<View style={{ padding: 50 }}>
@@ -52,7 +101,7 @@ class AddDeck extends Component {
 						text="Create Deck"
 						onPress={this.onSumbit}
 						color="#fff"
-						backgroundColor="#000"
+						backgroundColor={primary}
 					/>
 				</View>
 			</KeyboardAvoidingView>
@@ -60,4 +109,20 @@ class AddDeck extends Component {
 	}
 }
 
-export default AddDeck
+const mapStateToProps = state => ({
+	decks: state
+})
+
+const mapDispatchToProps = dispatch => {
+	return {
+		storeDeck: newDeck => {
+			dispatch(addDeck(newDeck))
+			createDeck(newDeck)
+		}
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddDeck)

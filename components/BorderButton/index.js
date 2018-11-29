@@ -6,7 +6,7 @@ const BorderButton = (props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={props.onPress}>
-        <Text style={[styles.button, {backgroundColor: props.backgroundColor, color: props.color}]}>
+        <Text style={[styles.button, {borderColor: props.backgroundColor, backgroundColor: props.backgroundColor, color: props.color, borderColor: props.borderColor}]}>
           {props.text}
         </Text>
       </TouchableOpacity>

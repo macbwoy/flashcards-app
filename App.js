@@ -1,32 +1,60 @@
 import React from 'react'
-import { Platform } from 'react-native'
+import { Platform, AsyncStorage } from 'react-native'
 import DeckList from './components/DeckList/index'
 import Deck from './components/Deck/index'
 import AddCard from './components/AddCard/index'
 import AddDeck from './components/AddDeck/index'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation'
-import { white, purple } from './utils/colors'
+import { white, purple, secondary, primary, tenary } from './utils/colors'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import mainReducer from './reducers/index'
 
 const DeckStack = createStackNavigator(
   {
-    DeckList: { screen: DeckList },
-    Deck: { screen: Deck },
+    Deck: { screen: Deck},
     AddCard: { screen: AddCard }
+  }, {
+    defaultNavigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: secondary
+      }
+    }
   }
-// {headerMode: 'none'}
+
+)
+
+const DeckListStack = createStackNavigator(
+  {
+    DeckList: { screen: DeckList }
+  }, {
+    defaultNavigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: secondary
+      }
+    }
+  }
 )
 const AddDeckStack = createStackNavigator(
   {
     AddDeck: { screen: AddDeck }
+  }, {
+    defaultNavigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: secondary
+      }
+    }
   }
-// {headerMode: 'none'}
 )
 
 const HomeStack = createBottomTabNavigator(
   {
-    Decks: {
-      screen: DeckStack,
+    DeckList: {
+      screen: DeckListStack,
       navigationOptions: () => ({
         title: 'Deck List',
         tabBarLabel: 'Deck List',
@@ -48,11 +76,12 @@ const HomeStack = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? purple : white,
+      activeTintColor: Platform.OS === 'ios' ? '#28587B' : white,
+      inactiveTintColor: '#9FB4C7',
       tabStyle: {},
       style: {
         height: 56,
-        backgroundColor: Platform.OS === 'ios' ? white : purple,
+        backgroundColor: Platform.OS === 'ios' ? '#EEEEFF' : purple,
         shadowColor: 'rgba(0, 0, 0, 0.24)',
         shadowOffset: {
           width: 0,
@@ -65,9 +94,25 @@ const HomeStack = createBottomTabNavigator(
   }
 )
 
-const AppContainer = createAppContainer(HomeStack)
+const MainStack = createStackNavigator(
+  {
+    Home: { screen: HomeStack },
+    Decks: { screen: DeckStack}
+  }, {
+    headerMode: 'none',
+    headerBackTitleVisible: true
+  }
+)
+
+const store = createStore(mainReducer)
+
+const AppContainer = createAppContainer(MainStack)
 export default class App extends React.Component {
   render () {
-    return <AppContainer />
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    )
   }
 }
