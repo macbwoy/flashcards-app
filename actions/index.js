@@ -10,6 +10,6 @@ export function addDeck (deck) {
   return {type: ADD_DECK, deck}
 }
 
-export function addQuestion (deck) {
-  return {type: ADD_QUESTION, deck}
+export function addQuestion (params) {
+  return {type: ADD_QUESTION, params}
 }

@@ -4,6 +4,7 @@ import BorderButton from "../BorderButton/index"
 import styles from "./styles"
 import { primary, white } from "../../utils/colors"
 import { Ionicons } from "@expo/vector-icons"
+import { connect } from "react-redux"
 
 class DeckView extends Component {
 	static navigationOptions = ({ navigation }) => {
@@ -40,13 +41,16 @@ class DeckView extends Component {
 	}
 
 	addCardHandler = () => {
+		const { title } = this.props.navigation.state.params
+		const { questions } = this.props.decks[title]
 		const { navigate } = this.props.navigation
 
-		navigate("AddCard")
+		navigate("AddCard", { title, questions })
 	}
-	render() {
-		const { title, questions } = this.props.navigation.state.params
 
+	render() {
+		const { title } = this.props.navigation.state.params
+		const { questions } = this.props.decks[title]
 		return (
 			<View style={styles.container}>
 				<View style={styles.deckHeader}>
@@ -78,4 +82,8 @@ class DeckView extends Component {
 	}
 }
 
-export default DeckView
+const mapStateToProps = state => ({
+	decks: state
+})
+
+export default connect(mapStateToProps)(DeckView)

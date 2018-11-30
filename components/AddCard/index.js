@@ -1,18 +1,22 @@
 import React, { Component } from "react"
-import { View, Keyboard } from "react-native"
+import { View, Keyboard, Alert } from "react-native"
 import BorderButton from "../BorderButton/index"
 import BorderTextInput from "../BorderTextInput/index"
 import styles from "./styles"
+import { connect } from "react-redux"
+import { storeNewQuestion } from "../../utils/api"
+import { addQuestion } from "../../actions"
 
 class AddCard extends Component {
+	static navigationOptions = () => {
+		return {
+			title: "Add Card"
+		}
+	}
+
 	state = {
 		questionText: "",
 		answerText: ""
-	}
-	onSumbit = () => {
-		console.log(JSON.stringify(this.state))
-		this.resetFields()
-		Keyboard.dismiss()
 	}
 
 	resetFields = () => {
@@ -20,7 +24,63 @@ class AddCard extends Component {
 			questionText: "",
 			answerText: ""
 		})
+		Keyboard.dismiss()
 	}
+
+	alertBox = options => {
+		const { navigation, storeQuestions } = this.props
+		this.resetFields()
+
+		options.title === "Confirm"
+			? Alert.alert(
+					options.title,
+					options.msg,
+					[
+						{
+							text: "Cancel",
+							onPress: () => console.log("Cancel Pressed"),
+							style: "cancel"
+						},
+						{
+							text: "OK",
+							onPress: () => {
+								storeQuestions(options.data)
+
+								navigation.goBack()
+							}
+						}
+					],
+					{ cancelable: false }
+			  )
+			: Alert.alert(options.title, options.msg)
+	}
+
+	onSumbit = () => {
+		const { questionText, answerText } = this.state
+		const { title, questions } = this.props.navigation.state.params
+
+		const data = {
+			questionText,
+			answerText,
+			title,
+			questions
+		}
+
+		if (!questionText.trim() || !answerText.trim()) {
+			this.alertBox({
+				title: "Error",
+				msg: "Fields can't be empty!"
+			})
+			return
+		}
+
+		this.alertBox({
+			title: "Confirm",
+			msg: "Press OK to add new question",
+			data
+		})
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -49,4 +109,26 @@ class AddCard extends Component {
 	}
 }
 
-export default AddCard
+const mapStateToProps = state => ({
+	decks: state
+})
+
+const mapDispatchToProps = dispatch => {
+	return {
+		storeQuestions: params => {
+			dispatch(addQuestion(params))
+			storeNewQuestion({
+				card: {
+					question: params.questionText,
+					answer: params.answerText
+				},
+				deckName: params.title
+			})
+		}
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddCard)

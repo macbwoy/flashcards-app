@@ -38,3 +38,19 @@ export const getDecks = async () => {
 export const createDeck = deck => {
 	return AsyncStorage.mergeItem(DB_KEY, JSON.stringify(deck))
 }
+
+export const storeNewQuestion = async ({ card, deckName }) => {
+	try {
+		const decks = await getDecks()
+		const newQuestions = decks[deckName].questions.concat([card])
+
+		createDeck({
+			[deckName]: {
+				title: deckName,
+				questions: newQuestions
+			}
+		})
+	} catch (error) {
+		console.log(error)
+	}
+}
