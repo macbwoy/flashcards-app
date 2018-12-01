@@ -4,12 +4,21 @@ import DeckList from './components/DeckList/index'
 import Deck from './components/Deck/index'
 import AddCard from './components/AddCard/index'
 import AddDeck from './components/AddDeck/index'
+import Quiz from './components/Quiz/index'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation'
 import { white, purple, secondary } from './utils/colors'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import mainReducer from './reducers/index'
+
+const QuizStack = createStackNavigator(
+  {
+    Quiz: { screen: Quiz }
+  }, {
+    headerMode: 'none'
+  }
+)
 
 const DeckStack = createStackNavigator(
   {
@@ -104,9 +113,21 @@ const MainStack = createStackNavigator(
   }
 )
 
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: MainStack
+    },
+    Quiz: {screen: QuizStack}
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none'
+  }
+)
 const store = createStore(mainReducer)
 
-const AppContainer = createAppContainer(MainStack)
+const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {
   render () {
     return (

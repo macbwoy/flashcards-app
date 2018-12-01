@@ -36,8 +36,12 @@ class DeckView extends Component {
 
 	state = {}
 
-	onPressHandler = () => {
-		console.log("Hello World")
+	startQuizHandler = () => {
+		const { title } = this.props.navigation.state.params
+		const { questions } = this.props.decks[title]
+		const { navigate } = this.props.navigation
+
+		navigate("Quiz", { questions, title })
 	}
 
 	addCardHandler = () => {
@@ -69,7 +73,7 @@ class DeckView extends Component {
 					/>
 					<BorderButton
 						text="Start Quiz"
-						onPress={this.onPressHandler}
+						onPress={this.startQuizHandler}
 						color="#fff"
 						backgroundColor={primary}
 					/>
