@@ -1,4 +1,3 @@
-import { AsyncStorage } from "react-native"
 import { Permissions, Notifications } from "expo"
 
 function createNotification() {
