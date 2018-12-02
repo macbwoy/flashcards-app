@@ -18,8 +18,8 @@ function decks(state = {}, action) {
 			return newState
 
 		case ADD_QUESTION:
-			const { title, questions, questionText, answerText } = action.params
-			const newQuestions = questions.concat([{ questionText, answerText }])
+			const { title, questions, question, answer } = action.params
+			const newQuestions = questions.concat([{ question, answer }])
 
 			return {
 				...state,

@@ -60,8 +60,8 @@ class AddCard extends Component {
 		const { title, questions } = this.props.navigation.state.params
 
 		const data = {
-			questionText,
-			answerText,
+			question: questionText.trim(),
+			answer: answerText.trim(),
 			title,
 			questions
 		}
@@ -119,8 +119,8 @@ const mapDispatchToProps = dispatch => {
 			dispatch(addQuestion(params))
 			API.storeNewQuestion({
 				card: {
-					question: params.questionText,
-					answer: params.answerText
+					question: params.question,
+					answer: params.answer
 				},
 				deckName: params.title
 			})
