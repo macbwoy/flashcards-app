@@ -11,6 +11,7 @@ import { white, purple, secondary } from './utils/colors'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import mainReducer from './reducers/index'
+import setLocalNotification from './utils/notification'
 
 const QuizStack = createStackNavigator(
   {
@@ -129,6 +130,9 @@ const store = createStore(mainReducer)
 
 const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {
+  componentDidMount () {
+    setLocalNotification()
+  }
   render () {
     return (
       <Provider store={store}>
