@@ -4,7 +4,7 @@ import BorderButton from "../BorderButton/index"
 import BorderTextInput from "../BorderTextInput/index"
 import styles from "./styles"
 import { connect } from "react-redux"
-import { storeNewQuestion } from "../../utils/api"
+import * as API from "../../utils/api"
 import { addQuestion } from "../../actions"
 
 class AddCard extends Component {
@@ -117,7 +117,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		storeQuestions: params => {
 			dispatch(addQuestion(params))
-			storeNewQuestion({
+			API.storeNewQuestion({
 				card: {
 					question: params.questionText,
 					answer: params.answerText

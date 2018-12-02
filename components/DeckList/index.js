@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import styles from "./styles"
 import { primary, secondary } from "../../utils/colors"
-import { getDecks } from "../../utils/api"
+import * as API from "../../utils/api"
 import { recieveDecks } from "../../actions"
 import { connect } from "react-redux"
 
@@ -27,7 +27,7 @@ class DeckList extends Component {
 
 	async componentDidMount() {
 		const { dispatch } = this.props
-		const initialDecks = await getDecks()
+		const initialDecks = await API.getDecks()
 
 		await dispatch(recieveDecks(initialDecks))
 		this.setState({ isLoading: false })

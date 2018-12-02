@@ -6,7 +6,7 @@ import styles from "./styles"
 import { primary } from "../../utils/colors"
 import { connect } from "react-redux"
 import { addDeck } from "../../actions"
-import { createDeck } from "../../utils/api"
+import * as API from "../../utils/api"
 
 class AddDeck extends Component {
 	static navigationOptions = {
@@ -117,7 +117,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		storeDeck: newDeck => {
 			dispatch(addDeck(newDeck))
-			createDeck(newDeck)
+			API.createDeck(newDeck)
 		}
 	}
 }

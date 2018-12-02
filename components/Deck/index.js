@@ -5,6 +5,8 @@ import styles from "./styles"
 import { primary, white } from "../../utils/colors"
 import { Ionicons } from "@expo/vector-icons"
 import { connect } from "react-redux"
+import * as API from "../../utils/api"
+import { removeDeck } from "../../actions"
 
 class DeckView extends Component {
 	static navigationOptions = ({ navigation }) => {
@@ -52,9 +54,19 @@ class DeckView extends Component {
 		navigate("AddCard", { title, questions })
 	}
 
+	removeDeckHandler = () => {
+		const { title } = this.props.navigation.state.params
+		const { navigate } = this.props.navigation
+		navigate("DeckList")
+		this.props.removeDeck(title)
+	}
+
 	render() {
 		const { title } = this.props.navigation.state.params
+		console.log(this.props.decks[title])
 		const { questions } = this.props.decks[title]
+			? this.props.decks[title]
+			: { questions: [] }
 		return (
 			<View style={styles.container}>
 				<View style={styles.deckHeader}>
@@ -77,7 +89,7 @@ class DeckView extends Component {
 						color="#fff"
 						backgroundColor={primary}
 					/>
-					<TouchableOpacity onPress={this.onPressHandler}>
+					<TouchableOpacity onPress={this.removeDeckHandler}>
 						<Text style={styles.deleteDeckText}>Delete Deck</Text>
 					</TouchableOpacity>
 				</View>
@@ -90,4 +102,17 @@ const mapStateToProps = state => ({
 	decks: state
 })
 
-export default connect(mapStateToProps)(DeckView)
+const mapDispatchToProps = dispatch => {
+	return {
+		removeDeck: title => {
+			API.removeDeck(title).then(() => {
+				dispatch(removeDeck(title))
+			})
+		}
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(DeckView)

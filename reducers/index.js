@@ -1,4 +1,4 @@
-import { ADD_DECK, RECIEVE_DECKS, ADD_QUESTION } from "../actions"
+import { ADD_DECK, RECIEVE_DECKS, ADD_QUESTION, REMOVE_DECK } from "../actions"
 
 function decks(state = {}, action) {
 	switch (action.type) {
@@ -12,6 +12,11 @@ function decks(state = {}, action) {
 				...state,
 				...action.deck
 			}
+		case REMOVE_DECK:
+			const newState = Object.assign({}, state)
+			delete newState[action.title]
+			return newState
+
 		case ADD_QUESTION:
 			const { title, questions, questionText, answerText } = action.params
 			const newQuestions = questions.concat([{ questionText, answerText }])

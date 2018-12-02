@@ -39,6 +39,17 @@ export const createDeck = deck => {
 	return AsyncStorage.mergeItem(DB_KEY, JSON.stringify(deck))
 }
 
+export const removeDeck = async title => {
+	const decks = await getDecks()
+	let newDeck = {}
+	for (deckTitle in decks) {
+		if (deckTitle !== title) {
+			newDeck[deckTitle] = decks[deckTitle]
+		}
+	}
+	return AsyncStorage.setItem(DB_KEY, JSON.stringify(newDeck))
+}
+
 export const storeNewQuestion = async ({ card, deckName }) => {
 	try {
 		const decks = await getDecks()
